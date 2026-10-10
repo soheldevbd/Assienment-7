@@ -1,0 +1,26 @@
+{
+  "name": "bazardor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "বাজার দর — প্রয়োজনীয় পণ্যের দাম এক নজরে",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "better-auth": "^1.7.7",
+    "mongodb": "^7.7.0",
+    "next": "^16.4.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.6.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "daisyui": "^5.7.47",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^4.3.3"
+  }
+}
