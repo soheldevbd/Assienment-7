@@ -27,8 +27,8 @@
 
 @theme {
   --font-sans: "Hind Siliguri", "Noto Sans Bengali", system-ui, sans-serif;
-  --color-up: #1a9951;
-  --color-down: #d03739;
+  --color-up: #d03739;   /* দাম বেড়েছে = লাল (Figma) */
+  --color-down: #1a9951; /* দাম কমেছে = সবুজ (Figma) */
   --color-line: #e1e8e1;
 }
 

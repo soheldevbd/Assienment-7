@@ -16,7 +16,7 @@ export default function ProductCard({ product: p }: { product: Product }) {
           <p className="text-xs text-base-content/60">প্রতি {p.unit}</p>
         </div>
       </div>
-      <div className="flex items-end justify-between gap-2 border-t border-line pt-3">
+      <div className="flex items-end justify-between gap-2">
         <div>
           <p className="text-xs text-base-content/60">আজকের দাম</p>
           <p className="text-lg font-bold">{bnTaka(p.price)}</p>

@@ -20,6 +20,10 @@ function Section({ title, subtitle, icon, children, id }: { title: string; subti
   );
 }
 
+function Empty({ text }: { text: string }) {
+  return <p className="rounded-xl border border-dashed border-line bg-base-100 p-6 text-center text-base-content/60">{text}</p>;
+}
+
 export default async function Home() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
   const risers = [...products].filter((p) => p.change > 0).sort((a, b) => b.change - a.change).slice(0, 6);
@@ -28,16 +32,12 @@ export default async function Home() {
   return (
     <>
       <Hero />
-      {risers.length > 0 && (
-        <Section title="আজ দাম বেড়েছে" subtitle="গতকালের তুলনায় সবচেয়ে বেশি বেড়েছে" icon={<span className="text-up">▲</span>}>
-          <ProductGrid products={risers} />
-        </Section>
-      )}
-      {fallers.length > 0 && (
-        <Section title="আজ দাম কমেছে" subtitle="গতকালের তুলনায় সবচেয়ে বেশি কমেছে" icon={<span className="text-down">▼</span>}>
-          <ProductGrid products={fallers} />
-        </Section>
-      )}
+      <Section title="আজ দাম বেড়েছে" icon={<span className="text-up">▲</span>}>
+        {risers.length ? <ProductGrid products={risers} /> : <Empty text="আজ কোনো পণ্যের দাম বাড়েনি।" />}
+      </Section>
+      <Section title="আজ দাম কমেছে" icon={<span className="text-down">▼</span>}>
+        {fallers.length ? <ProductGrid products={fallers} /> : <Empty text="আজ কোনো পণ্যের দাম কমেনি।" />}
+      </Section>
       <Section id="সব-পণ্য" title="সব পণ্য" subtitle="সব ক্যাটাগরির আজকের দাম ও পরিবর্তন">
         <ProductBrowser products={products} categories={categories} withFilters />
       </Section>

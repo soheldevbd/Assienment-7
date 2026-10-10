@@ -33,6 +33,15 @@ async function get(path: string): Promise<GetResult> {
   return { error: true };
 }
 
+/** "▼ ২.৯%", "-2.9", "২.৯" -> signed number */
+function parseChange(v: unknown): number | null {
+  const n = parseNum(v);
+  if (n === null) return null;
+  if (typeof v === "string" && /[▼↓]/.test(v)) return -Math.abs(n);
+  if (typeof v === "string" && /[▲↑]/.test(v)) return Math.abs(n);
+  return n;
+}
+
 const first = (o: Raw | null | undefined, keys: string[]): any => { // eslint-disable-line @typescript-eslint/no-explicit-any
   for (const k of keys) if (o?.[k] !== undefined && o?.[k] !== null && o?.[k] !== "") return o[k];
   return undefined;
@@ -101,7 +110,15 @@ export function normalizeProduct(p: Raw | null): Product | null {
   if (price === null && min !== null && max !== null) price = (min + max) / 2;
 
   const prev = parseNum(first(p, ["yesterday_price", "yesterdayPrice", "previous_price", "previousPrice", "prev_price", "prevPrice"]));
-  let change = parseNum(first(p, ["change_percent", "changePercent", "percent_change", "percentChange", "change_pct", "changePct", "change", "percentage"]));
+  let change = parseChange(first(p, ["change_percent", "changePercent", "percent_change", "percentChange", "change_pct", "changePct", "change", "percentage", "percent", "pct"]));
+  if (change === null) {
+    // fuzzy fallback: any numeric field that looks like a percentage change
+    const key = Object.keys(p).find((k) => /(change|percent|pct|diff)/i.test(k) && !/(amount|taka|value|price)/i.test(k) && parseChange(p[k]) !== null);
+    if (key) change = parseChange(p[key]);
+  }
+  const dir = String(first(p, ["trend", "direction", "status", "movement", "change_type", "changeType"]) ?? "").toLowerCase();
+  if (change !== null && change > 0 && /(down|fall|decreas|drop|কম)/.test(dir)) change = -change;
+  if (change !== null && change < 0 && /(up|rise|increas|বেড়)/.test(dir)) change = Math.abs(change);
   let changeAmount = parseNum(first(p, ["change_amount", "changeAmount", "price_change", "priceChange"]));
   if (prev !== null && price !== null) {
     if (change === null && prev !== 0) change = ((price - prev) / prev) * 100;

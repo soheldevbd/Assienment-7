@@ -53,7 +53,7 @@ export default function SignInForm() {
       <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
         <Field label="ইমেইল" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
         <Field label="পাসওয়ার্ড" name="password" type="password" placeholder="কমপক্ষে ৮ অক্ষর" autoComplete="current-password" required />
-        {error && <p role="alert" className="rounded-lg bg-down/10 px-3 py-2 text-sm text-down">{error}</p>}
+        {error && <p role="alert" className="rounded-lg bg-error/10 px-3 py-2 text-sm text-error">{error}</p>}
         <button className="btn btn-primary" disabled={loading}>
           {loading && <span className="loading loading-spinner loading-sm" />} সাইন ইন
         </button>
