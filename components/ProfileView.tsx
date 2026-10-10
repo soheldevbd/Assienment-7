@@ -2,9 +2,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import type { SessionUser } from "@/lib/types";
 import { useSession, signOut } from "@/lib/auth-client";
 
-export default function ProfileView({ initialUser }) {
+export default function ProfileView({ initialUser }: { initialUser: SessionUser }) {
   const { data } = useSession();
   const router = useRouter();
   const user = data?.user ?? initialUser;

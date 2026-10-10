@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/bazardor";
-const globalForMongo = globalThis;
+const globalForMongo = globalThis as unknown as { _bazardorMongo?: MongoClient };
 
 export const client = globalForMongo._bazardorMongo ?? new MongoClient(uri);
 if (process.env.NODE_ENV !== "production") globalForMongo._bazardorMongo = client;

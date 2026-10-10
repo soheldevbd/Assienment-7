@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
@@ -6,12 +7,14 @@ import { getProduct } from "@/lib/api";
 import PriceBadge from "@/components/PriceBadge";
 import { bnNumber, bnTaka } from "@/lib/bn";
 
-export async function generateMetadata({ params }) {
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await getProduct(decodeURIComponent((await params).slug)).catch(() => null);
   return { title: p?.name ?? "পণ্য পাওয়া যায়নি" };
 }
 
-function Stat({ label, value, note }) {
+function Stat({ label, value, note }: { label: string; value: number | null; note?: string }) {
   return (
     <div className="rounded-xl border border-line bg-base-100 p-4">
       <p className="text-sm text-base-content/70">{label}</p>
@@ -21,7 +24,7 @@ function Stat({ label, value, note }) {
   );
 }
 
-export default async function ProductPage({ params }) {
+export default async function ProductPage({ params }: Props) {
   const slug = decodeURIComponent((await params).slug);
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect(`/signin?reason=protected&callbackUrl=${encodeURIComponent(`/product/${slug}`)}`);

@@ -5,7 +5,7 @@ import ProductGrid from "@/components/ProductGrid";
 import ProductBrowser from "@/components/ProductBrowser";
 import { getCategories, getProducts } from "@/lib/api";
 
-function Section({ title, subtitle, icon, children, id }) {
+function Section({ title, subtitle, icon, children, id }: { title: string; subtitle?: string; icon?: React.ReactNode; children: React.ReactNode; id?: string }) {
   return (
     <section id={id} className="mt-10">
       <div className="mb-4 flex items-center gap-2">

@@ -1,10 +1,11 @@
 "use client";
+import type { Category } from "@/lib/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthButtons from "./AuthButtons";
 import BanglaDate from "./BanglaDate";
 
-export default function Navbar({ categories }) {
+export default function Navbar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
   return (
     <div className="border-b border-line bg-base-100">

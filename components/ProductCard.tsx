@@ -1,8 +1,9 @@
 import Link from "next/link";
+import type { Product } from "@/lib/types";
 import PriceBadge from "./PriceBadge";
 import { bnTaka } from "@/lib/bn";
 
-export default function ProductCard({ product: p }) {
+export default function ProductCard({ product: p }: { product: Product }) {
   return (
     <Link
       href={`/product/${encodeURIComponent(p.slug)}`}

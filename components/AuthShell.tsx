@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function AuthShell({ title, subtitle, children, footer }) {
+export default function AuthShell({ title, subtitle, children, footer }: { title: string; subtitle: string; children: React.ReactNode; footer: React.ReactNode }) {
   return (
     <div className="mx-auto w-full max-w-md py-8">
       <div className="rounded-2xl border border-line bg-base-100 p-6 shadow-sm sm:p-8">
@@ -14,7 +14,7 @@ export default function AuthShell({ title, subtitle, children, footer }) {
   );
 }
 
-export function Field({ label, ...props }) {
+export function Field({ label, ...props }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="flex flex-col gap-1">
       <span className="text-sm font-medium">{label}</span>

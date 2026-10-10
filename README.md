@@ -5,7 +5,7 @@
 **Live:** _add your Vercel link_ · **Repo:** _add your GitHub link_
 
 ## Technologies
-Next.js 16 (App Router) · React 19 · Tailwind CSS v4 + DaisyUI 5 · Better Auth (email/password, Google, GitHub) · MongoDB · react-hot-toast
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 + DaisyUI 5 · Better Auth (email/password, Google, GitHub) · MongoDB · react-hot-toast
 
 ## Key Features
 1. 📈 Scrolling price ticker (▲/▼ %) + Bangla date + highlighted active category nav

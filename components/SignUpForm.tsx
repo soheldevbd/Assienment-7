@@ -12,14 +12,14 @@ export default function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function onSubmit(e) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const name = fd.get("name")?.toString().trim();
     const email = fd.get("email")?.toString().trim();
     const password = fd.get("password")?.toString() ?? "";
     const confirm = fd.get("confirm")?.toString() ?? "";
-    const fail = (m) => { setError(m); toast.error(m); };
+    const fail = (m: string) => { setError(m); toast.error(m); };
 
     if (!name || !email || !password) return fail("সব ঘর পূরণ করুন");
     if (password.length < 8) return fail("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে");

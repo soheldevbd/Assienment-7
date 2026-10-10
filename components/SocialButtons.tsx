@@ -17,9 +17,9 @@ const GithubIcon = () => (
   </svg>
 );
 
-export default function SocialButtons({ callbackURL = "/" }) {
+export default function SocialButtons({ callbackURL = "/" }: { callbackURL?: string }) {
   const [busy, setBusy] = useState("");
-  const go = async (provider, label) => {
+  const go = async (provider: "google" | "github", label: string) => {
     setBusy(provider);
     const { error } = await signIn.social({ provider, callbackURL });
     if (error) {

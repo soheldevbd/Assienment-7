@@ -22,7 +22,7 @@ export default function SignInForm() {
     if (params.get("registered")) toast.success("অ্যাকাউন্ট তৈরি হয়েছে! এখন সাইন ইন করুন");
   }, [params]);
 
-  async function onSubmit(e) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const email = fd.get("email")?.toString().trim();

@@ -1,11 +1,15 @@
 import { parseNum } from "./bn";
+import type { Category, Market, Product } from "./types";
+
+type Raw = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+type GetResult = { data?: unknown; notFound?: true; error?: true };
 
 const BASES = [
   process.env.NEXT_PUBLIC_API_BASE || "https://api.api-store.workers.dev/api/bazardor",
   "https://api.abcz.workers.dev/api/bazardor",
 ];
 
-export const FALLBACK_CATEGORIES = [
+export const FALLBACK_CATEGORIES: Category[] = [
   { slug: "chal", name: "চাল", emoji: "🍚" },
   { slug: "dal", name: "ডাল", emoji: "🫘" },
   { slug: "tel", name: "তেল", emoji: "🛢️" },
@@ -16,7 +20,7 @@ export const FALLBACK_CATEGORIES = [
   { slug: "moshla", name: "মসলা", emoji: "🌶️" },
 ];
 
-async function get(path) {
+async function get(path: string): Promise<GetResult> {
   for (const base of BASES) {
     try {
       const res = await fetch(base + path, { next: { revalidate: 300 } });
@@ -29,24 +33,24 @@ async function get(path) {
   return { error: true };
 }
 
-const first = (o, keys) => {
+const first = (o: Raw | null | undefined, keys: string[]): any => { // eslint-disable-line @typescript-eslint/no-explicit-any
   for (const k of keys) if (o?.[k] !== undefined && o?.[k] !== null && o?.[k] !== "") return o[k];
   return undefined;
 };
 
 /** API response can be [..] or { data/products/categories/items: [..] } */
-function unwrapList(json, keys) {
+function unwrapList(json: any, keys: string[]): Raw[] { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (Array.isArray(json)) return json;
   for (const k of [...keys, "data", "items", "results"]) if (Array.isArray(json?.[k])) return json[k];
   return [];
 }
-function unwrapOne(json, keys) {
+function unwrapOne(json: any, keys: string[]): Raw | null { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!json || Array.isArray(json)) return json?.[0] ?? null;
   for (const k of [...keys, "data", "item", "result"]) if (json[k] && typeof json[k] === "object" && !Array.isArray(json[k])) return json[k];
   return json;
 }
 
-export function normalizeCategory(c) {
+export function normalizeCategory(c: string | Raw): Category {
   if (typeof c === "string") {
     const f = FALLBACK_CATEGORIES.find((x) => x.slug === c);
     return { slug: c, name: f?.name ?? c, emoji: f?.emoji ?? "🛒" };
@@ -59,7 +63,7 @@ export function normalizeCategory(c) {
   };
 }
 
-function normalizeMarket(m) {
+function normalizeMarket(m: Raw): Market {
   const min = parseNum(first(m, ["min", "min_price", "minPrice", "lowest", "minimum"]));
   const max = parseNum(first(m, ["max", "max_price", "maxPrice", "highest", "maximum"]));
   let avg = parseNum(first(m, ["avg", "average", "avg_price", "avgPrice", "price"]));
@@ -71,7 +75,7 @@ function normalizeMarket(m) {
   };
 }
 
-export function normalizeProduct(p) {
+export function normalizeProduct(p: Raw | null): Product | null {
   if (!p) return null;
   const catRaw = first(p, ["category", "category_slug", "categorySlug", "category_id"]);
   const catObj = typeof catRaw === "object" && catRaw ? normalizeCategory(catRaw) : null;
@@ -85,9 +89,9 @@ export function normalizeProduct(p) {
   let min = parseNum(first(p, ["min_price", "minPrice", "min", "lowest_price"]));
   let max = parseNum(first(p, ["max_price", "maxPrice", "max", "highest_price"]));
   let avg = parseNum(first(p, ["avg_price", "avgPrice", "average_price", "averagePrice", "avg", "average"]));
-  const mins = markets.map((m) => m.min).filter((v) => v !== null);
-  const maxs = markets.map((m) => m.max).filter((v) => v !== null);
-  const avgs = markets.map((m) => m.avg).filter((v) => v !== null);
+  const mins = markets.map((m) => m.min).filter((v): v is number => v !== null);
+  const maxs = markets.map((m) => m.max).filter((v): v is number => v !== null);
+  const avgs = markets.map((m) => m.avg).filter((v): v is number => v !== null);
   if (min === null && mins.length) min = Math.min(...mins);
   if (max === null && maxs.length) max = Math.max(...maxs);
   if (avg === null && avgs.length) avg = avgs.reduce((a, b) => a + b, 0) / avgs.length;
@@ -123,16 +127,16 @@ export function normalizeProduct(p) {
   };
 }
 
-export async function getCategories() {
+export async function getCategories(): Promise<Category[]> {
   const r = await get("/categories");
   if (r.data) {
-    const list = unwrapList(r.data, ["categories"]).map(normalizeCategory).filter((c) => c.slug);
+    const list = unwrapList(r.data, ["categories"]).map((c) => normalizeCategory(c)).filter((c) => c.slug);
     if (list.length) return list;
   }
   return FALLBACK_CATEGORIES;
 }
 
-export async function getCategory(slug) {
+export async function getCategory(slug: string): Promise<Category | null> {
   const r = await get(`/categories/${encodeURIComponent(slug)}`);
   if (r.data) {
     const one = unwrapOne(r.data, ["category"]);
@@ -142,15 +146,15 @@ export async function getCategory(slug) {
   return all.find((c) => c.slug === slug) ?? null;
 }
 
-export async function getProducts(category) {
+export async function getProducts(category?: string): Promise<Product[]> {
   const q = category ? `?category=${encodeURIComponent(category)}` : "";
   const r = await get(`/products${q}`);
   if (r.error) throw new Error("API unavailable");
-  const list = unwrapList(r.data, ["products"]).map(normalizeProduct).filter(Boolean);
+  const list = unwrapList(r.data, ["products"]).map((p) => normalizeProduct(p)).filter((p): p is Product => p !== null);
   return category ? list.filter((p) => !p.category || p.category === category) : list;
 }
 
-export async function getProduct(slug) {
+export async function getProduct(slug: string): Promise<Product | null> {
   const r = await get(`/products/${encodeURIComponent(slug)}`);
   if (r.data) {
     const one = normalizeProduct(unwrapOne(r.data, ["product"]));

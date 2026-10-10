@@ -1,6 +1,7 @@
+import type { Product } from "@/lib/types";
 import { bnNumber, bnPercent } from "@/lib/bn";
 
-function Item({ p }) {
+function Item({ p }: { p: Product }) {
   const up = p.change > 0.0001, down = p.change < -0.0001;
   return (
     <span className="flex items-center gap-2 whitespace-nowrap px-5 text-sm">
@@ -14,7 +15,7 @@ function Item({ p }) {
   );
 }
 
-export default function Ticker({ products }) {
+export default function Ticker({ products }: { products: Product[] }) {
   if (!products?.length) return null;
   return (
     <div className="marquee overflow-hidden border-t border-line bg-primary/5" aria-label="দামের তালিকা">

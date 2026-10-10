@@ -1,6 +1,6 @@
 "use client";
 
-export default function Error({ reset }) {
+export default function Error({ reset }: { error: Error; reset: () => void }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-3 py-16 text-center">
       <p className="text-5xl">⚠️</p>

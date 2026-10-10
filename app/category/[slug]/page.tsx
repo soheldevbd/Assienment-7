@@ -1,18 +1,21 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductBrowser from "@/components/ProductBrowser";
 import NotFoundView from "@/components/NotFoundView";
 import { getCategory, getProducts } from "@/lib/api";
 import { toBnDigits } from "@/lib/bn";
 
-export async function generateMetadata({ params }) {
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const c = await getCategory(decodeURIComponent(slug));
   return { title: c?.name ?? "ক্যাটাগরি পাওয়া যায়নি" };
 }
 
-export default async function CategoryPage({ params }) {
+export default async function CategoryPage({ params }: Props) {
   const slug = decodeURIComponent((await params).slug);
   const category = await getCategory(slug);
   if (!category) notFound();

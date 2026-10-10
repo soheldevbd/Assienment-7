@@ -1,13 +1,14 @@
 "use client";
+import type { SortMode } from "@/lib/types";
 
-export default function SortSelect({ value, onChange }) {
+export default function SortSelect({ value, onChange }: { value: SortMode; onChange: (v: SortMode) => void }) {
   return (
     <label className="flex items-center gap-2 text-sm">
       <span className="text-base-content/70">সাজান:</span>
       <span className="relative">
         <select
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value as SortMode)}
           className="select select-sm sm:select-md appearance-none border-line bg-base-100 pr-8"
           aria-label="সাজান"
         >

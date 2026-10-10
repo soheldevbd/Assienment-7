@@ -3,10 +3,11 @@ import { useMemo, useState } from "react";
 import ProductGrid from "./ProductGrid";
 import SortSelect from "./SortSelect";
 import { sortProducts, toBnDigits } from "@/lib/bn";
+import type { Category, Product, SortMode } from "@/lib/types";
 
 /** Client-side sort (+ optional search & category chips for the home page). */
-export default function ProductBrowser({ products, categories = [], withFilters = false }) {
-  const [sort, setSort] = useState("default");
+export default function ProductBrowser({ products, categories = [], withFilters = false }: { products: Product[]; categories?: Category[]; withFilters?: boolean }) {
+  const [sort, setSort] = useState<SortMode>("default");
   const [cat, setCat] = useState("all");
   const [q, setQ] = useState("");
 
@@ -37,7 +38,7 @@ export default function ProductBrowser({ products, categories = [], withFilters 
 
       {withFilters && (
         <div className="flex gap-2 overflow-x-auto pb-1">
-          {[{ slug: "all", name: "সব", emoji: "" }, ...categories].map((c) => (
+          {[{ slug: "all", name: "সব", emoji: "" } as Category, ...categories].map((c) => (
             <button
               key={c.slug}
               onClick={() => setCat(c.slug)}

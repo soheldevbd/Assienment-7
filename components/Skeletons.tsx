@@ -13,7 +13,7 @@ export function CardSkeleton() {
   );
 }
 
-export function GridSkeleton({ count = 6 }) {
+export function GridSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="লোড হচ্ছে…">
       {Array.from({ length: count }).map((_, i) => <CardSkeleton key={i} />)}

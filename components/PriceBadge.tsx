@@ -1,6 +1,6 @@
 import { bnPercent } from "@/lib/bn";
 
-export default function PriceBadge({ change = 0, className = "" }) {
+export default function PriceBadge({ change = 0, className = "" }: { change?: number; className?: string }) {
   const up = change > 0.0001;
   const down = change < -0.0001;
   const tone = up ? "bg-up/10 text-up" : down ? "bg-down/10 text-down" : "bg-gray-200 text-gray-500";

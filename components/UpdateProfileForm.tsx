@@ -6,11 +6,11 @@ import toast from "react-hot-toast";
 import { updateUser } from "@/lib/auth-client";
 import { Field } from "./AuthShell";
 
-export default function UpdateProfileForm({ initialName }) {
+export default function UpdateProfileForm({ initialName }: { initialName: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit(e) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const name = new FormData(e.currentTarget).get("name")?.toString().trim();
     if (!name) return toast.error("নাম খালি রাখা যাবে না");

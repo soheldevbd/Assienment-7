@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Ticker from "@/components/Ticker";
@@ -5,13 +6,13 @@ import Footer from "@/components/Footer";
 import ToasterProvider from "@/components/ToasterProvider";
 import { getCategories, getProducts } from "@/lib/api";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: { default: "বাজার দর — প্রয়োজনীয় পণ্যের দাম এক নজরে", template: "%s | বাজার দর" },
   description: "চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার আজকের বাজারদর এক জায়গায়।",
   icons: { icon: "/logo-icon.png" },
 };
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [categories, products] = await Promise.all([getCategories(), getProducts().catch(() => [])]);
   return (
     <html lang="bn" data-theme="bazar">
